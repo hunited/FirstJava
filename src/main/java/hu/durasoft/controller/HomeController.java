@@ -1,5 +1,6 @@
 package hu.durasoft.controller;
 
+import hu.durasoft.domain.Blogger;
 import hu.durasoft.service.StoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Locale;
 
 @Controller
@@ -22,7 +24,7 @@ public class HomeController {
     }
 
     @RequestMapping("/")
-    public String stories(Model model, Locale locale) {
+    public String stories(Model model) {
         model.addAttribute("pageTitle", "DuraSoft cikkek");
         model.addAttribute("stories", storyService.getStories());
         model.addAttribute("footerText", "Made by DuraSoft © 2021");
@@ -34,6 +36,14 @@ public class HomeController {
         model.addAttribute("story", storyService.findFirstByOrderByPostedDesc());
         model.addAttribute("footerText", "Made by DuraSoft © 2021");
         return "story";
+    }
+
+    @RequestMapping("/blogger")
+    public String blogger(Model model) {
+        model.addAttribute("pageTitle", "DuraSoft cikkek");
+        model.addAttribute("bloggers", storyService.getBloggers());
+        model.addAttribute("footerText", "Made by DuraSoft © 2021");
+        return "bloggers";
     }
 
     @RequestMapping("/title/{title}")

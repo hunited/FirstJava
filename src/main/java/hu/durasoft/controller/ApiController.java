@@ -1,5 +1,6 @@
 package hu.durasoft.controller;
 
+import hu.durasoft.domain.Blogger;
 import hu.durasoft.domain.Story;
 import hu.durasoft.service.StoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,11 @@ public class ApiController {
     @RequestMapping("/storyapi")
     public Story story() {
         return storyService.findFirstByOrderByPostedDesc();
+    }
+
+    @RequestMapping("/bloggerapi")
+    public List<Blogger> bloggers() {
+        return storyService.getBloggers();
     }
 
     @RequestMapping("/titleapi/{title}")

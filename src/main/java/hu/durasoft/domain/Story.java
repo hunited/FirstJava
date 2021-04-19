@@ -1,19 +1,19 @@
 package hu.durasoft.domain;
 
-import javax.persistence.*;
+//import javax.persistence.*;
 import java.util.Date;
 
-@Entity
+//@Entity
 public class Story {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@Id
     private Long id;
     private String title;
-    @Column(columnDefinition = "TEXT")
+    //@Column(columnDefinition = "TEXT")
     private String content;
     private Date posted;
-    @ManyToOne
+    //@ManyToOne
     private Blogger blogger;
 
     private Story() {
@@ -24,6 +24,11 @@ public class Story {
         this.content = content;
         this.posted = posted;
         this.blogger = blogger;
+    }
+
+    public Story(Long id, String title, String content, Date posted, Blogger blogger) {
+        this(title, content, posted, blogger);
+        this.id = id;
     }
 
     public Long getId() {

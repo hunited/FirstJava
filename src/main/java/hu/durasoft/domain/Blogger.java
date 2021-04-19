@@ -1,20 +1,17 @@
 package hu.durasoft.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
-import javax.persistence.*;
 import java.util.List;
 
-@Entity
+//@Entity
 public class Blogger {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@Id
     private Long id;
     private String name;
     private int age;
-    @JsonBackReference
-    @OneToMany(mappedBy = "blogger")
+    //@JsonBackReference
+    //@OneToMany(mappedBy = "blogger")
     private List<Story> stories;
 
     private Blogger() {
@@ -23,6 +20,11 @@ public class Blogger {
     public Blogger(String name, int age) {
         this.name = name;
         this.age = age;
+    }
+
+    public Blogger(Long id, String name, int age) {
+        this(name, age);
+        this.id = id;
     }
 
     public Long getId() {

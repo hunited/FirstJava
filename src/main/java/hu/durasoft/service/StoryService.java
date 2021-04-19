@@ -1,6 +1,7 @@
 package hu.durasoft.service;
 
 //import hu.durasoft.domain.Blogger;
+import hu.durasoft.domain.Blogger;
 import hu.durasoft.domain.Story;
 import hu.durasoft.repository.BloggerRepository;
 import hu.durasoft.repository.StoryRepository;
@@ -41,6 +42,14 @@ public class StoryService {
 
     public List<Story> getStoriesByBloggerName(String name) {
         return storyRepo.findAllByBloggerNameIgnoreCaseOrderByPostedDesc(name);
+    }
+
+    public List<Blogger> getBloggers() {
+        List<Blogger> bloggers = bloggerRepo.findAll();
+        for (Blogger blogger : bloggers) {
+            blogger.setStories(getStoriesByBloggerName(blogger.getName()));
+        }
+        return bloggers;
     }
 
 //    @PostConstruct
