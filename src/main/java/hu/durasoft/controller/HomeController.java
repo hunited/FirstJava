@@ -2,7 +2,6 @@ package hu.durasoft.controller;
 
 import hu.durasoft.service.StoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Locale;
 
 @Controller
 public class HomeController {
@@ -17,13 +17,12 @@ public class HomeController {
     private StoryService storyService;
 
     @Autowired
-    @Qualifier("Story")
     public void setStoryService(StoryService storyService) {
         this.storyService = storyService;
     }
 
     @RequestMapping("/")
-    public String stories(Model model) {
+    public String stories(Model model, Locale locale) {
         model.addAttribute("pageTitle", "DuraSoft cikkek");
         model.addAttribute("stories", storyService.getStories());
         model.addAttribute("footerText", "Made by DuraSoft © 2021");

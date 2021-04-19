@@ -16,10 +16,10 @@ public interface StoryRepository extends CrudRepository<Story, Long> {
     Story findFirstByOrderByPostedDesc();
 
     //@Query(value = "SELECT * FROM story WHERE title = ?1 LIMIT 1", nativeQuery = true)
-    //Story findByTitle(String title);
+    //Story findByTitleIgnoreCase(String title);
     //@Query(value = "SELECT * FROM story WHERE title = :title LIMIT 1", nativeQuery = true)
     @Query(value = "SELECT s FROM Story s WHERE s.title = :title")
-    Story findByTitle(@Param("title") String title);
+    Story findByTitleIgnoreCase(@Param("title") String title);
 
     List<Story> findAllByBloggerNameIgnoreCaseOrderByPostedDesc(String name);
 
