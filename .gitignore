@@ -1,0 +1,14 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+/shelf/
+/workspace.xml
+
+### IntelliJ IDEA ###
+target
+.idea
+*.iws
+*.iml
+*.ipr
