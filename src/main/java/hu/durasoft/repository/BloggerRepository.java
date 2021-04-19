@@ -2,7 +2,6 @@ package hu.durasoft.repository;
 
 import hu.durasoft.domain.Blogger;
 //import org.springframework.data.repository.CrudRepository;
-import hu.durasoft.domain.Story;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -13,7 +12,7 @@ import java.util.List;
 //public interface BloggerRepository extends CrudRepository<Blogger, Long> {
 public class BloggerRepository {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public BloggerRepository(JdbcTemplate jdbcTemplate) {
@@ -28,5 +27,7 @@ public class BloggerRepository {
                 rs.getInt("age")
         ));
     }
+
+    //List<Blogger> findAll();
 
 }

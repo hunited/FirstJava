@@ -4,7 +4,6 @@ import hu.durasoft.domain.Blogger;
 import hu.durasoft.domain.Story;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -15,7 +14,7 @@ import java.util.List;
 //public interface StoryRepository extends CrudRepository<Story, Long> {
 public class StoryRepository {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public StoryRepository(JdbcTemplate jdbcTemplate) {
@@ -24,65 +23,45 @@ public class StoryRepository {
 
     public List<Story> findAll() {
         String sql = "SELECT * FROM story ORDER BY posted DESC";
-        return jdbcTemplate.query(sql, (rs, i) -> new Story(
-                rs.getLong("id"),
-                rs.getString("title"),
-                rs.getString("content"),
-                rs.getDate("posted"),
-                findBloggerById(rs.getLong("blogger_id"))
-        ));
+        return jdbcTemplate.query(sql, (rs, i) -> getStory(rs));
     }
 
     public Story findByTitleIgnoreCase(String title) {
         String sql = "SELECT * FROM story WHERE LOWER(title) = LOWER(?) ORDER BY posted DESC LIMIT 1";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Story(
-                rs.getLong("id"),
-                rs.getString("title"),
-                rs.getString("content"),
-                rs.getDate("posted"),
-                findBloggerById(rs.getLong("blogger_id"))
-        ), title);
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> getStory(rs), title);
     }
 
     public Story findFirstByOrderByPostedDesc() {
         String sql = "SELECT * FROM story ORDER BY posted DESC LIMIT 1";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Story(
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> getStory(rs));
+    }
+
+    public List<Story> findAllByBloggerNameIgnoreCaseOrderByPostedDesc(String name) {
+        String sql = "SELECT * FROM story WHERE blogger_id = (SELECT id FROM blogger WHERE LOWER(name) = LOWER(?)) ORDER BY posted DESC";
+        return jdbcTemplate.query(sql, (rs, i) -> getStory(rs), name);
+    }
+
+    public Blogger findBloggerById(Long id) {
+        String sql = "SELECT * FROM blogger WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> getBlogger(rs), id);
+    }
+
+    private Story getStory(ResultSet rs) throws SQLException {
+        return new Story(
                 rs.getLong("id"),
                 rs.getString("title"),
                 rs.getString("content"),
                 rs.getDate("posted"),
                 findBloggerById(rs.getLong("blogger_id"))
-        ));
+        );
     }
 
-    public List<Story> findAllByBloggerNameIgnoreCaseOrderByPostedDesc(String name) {
-        Blogger blogger = findBloggerByName(name);
-        String sql = "SELECT * FROM story WHERE blogger_id = (SELECT id FROM blogger WHERE LOWER(name) = LOWER(?)) ORDER BY posted DESC";
-        return jdbcTemplate.query(sql, (rs, i) -> new Story(
-                rs.getLong("id"),
-                rs.getString("title"),
-                rs.getString("content"),
-                rs.getDate("posted"),
-                blogger
-        ), name);
-    }
-
-    public Blogger findBloggerById(Long id) {
-        String sql = "SELECT * FROM blogger WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Blogger(
+    private Blogger getBlogger(ResultSet rs) throws SQLException {
+        return new Blogger(
                 rs.getLong("id"),
                 rs.getString("name"),
                 rs.getInt("age")
-        ), id);
-    }
-
-    public Blogger findBloggerByName(String name) {
-        String sql = "SELECT * FROM blogger WHERE LOWER(name) = LOWER(?)";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Blogger(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getInt("age")
-        ), name);
+        );
     }
 
 //    List<Story> findAll();

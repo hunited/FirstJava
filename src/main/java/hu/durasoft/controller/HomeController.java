@@ -1,6 +1,5 @@
 package hu.durasoft.controller;
 
-import hu.durasoft.domain.Blogger;
 import hu.durasoft.service.StoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,11 +9,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Locale;
 
 @Controller
 public class HomeController {
+
+    private static final String STORY = "story";
+    private static final String FOOTER = "footerText";
+    private static final String COPYRIGHT = "Made by DuraSoft © 2021";
 
     private StoryService storyService;
 
@@ -27,22 +28,22 @@ public class HomeController {
     public String stories(Model model) {
         model.addAttribute("pageTitle", "DuraSoft cikkek");
         model.addAttribute("stories", storyService.getStories());
-        model.addAttribute("footerText", "Made by DuraSoft © 2021");
+        model.addAttribute(FOOTER, COPYRIGHT);
         return "stories";
     }
 
     @RequestMapping("/story")
     public String story(Model model) {
-        model.addAttribute("story", storyService.findFirstByOrderByPostedDesc());
-        model.addAttribute("footerText", "Made by DuraSoft © 2021");
-        return "story";
+        model.addAttribute(STORY, storyService.findFirstByOrderByPostedDesc());
+        model.addAttribute(FOOTER, COPYRIGHT);
+        return STORY;
     }
 
     @RequestMapping("/blogger")
     public String blogger(Model model) {
         model.addAttribute("pageTitle", "DuraSoft cikkek");
         model.addAttribute("bloggers", storyService.getBloggers());
-        model.addAttribute("footerText", "Made by DuraSoft © 2021");
+        model.addAttribute(FOOTER, COPYRIGHT);
         return "bloggers";
     }
 
@@ -51,8 +52,8 @@ public class HomeController {
         if (title == null) {
             throw new IllegalArgumentException("Title not found");
         }
-        model.addAttribute("story", storyService.findByTitle(title));
-        return "story";
+        model.addAttribute(STORY, storyService.findByTitle(title));
+        return STORY;
     }
 
     @ExceptionHandler(Exception.class)
